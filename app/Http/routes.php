@@ -111,3 +111,52 @@ echo "has edit-user and create-post permission:".$user->can(['edit-user', 'creat
 
 });
 
+Route::get('/auth', function () {
+	Auth::attempt(['email'=>'luismartinez242011@gmail.com', 'password'=>'admin']);
+});
+
+Route::get('/logout', function () {
+	Auth::logout();
+});
+
+Route::get('/data', function () {
+	echo "Name:".Auth::user()->name;
+});
+
+Route::get('/entrust', function () {
+
+	$user = User::where('name', '=', 'admin')->first();
+	if ($user->hasRole('owner')) {
+		echo "es un owner"; 
+	}else{
+		echo "es un admin";
+	}
+	echo "<br>";
+	if ($user->hasRole('admin')) {
+		echo "es un admin"; 
+	}else{
+		echo "no es un admin";
+	}
+	echo "<br>";
+	if (Entrust::hasRole('admin')) {
+		echo "es un admin"; 
+	}else{
+		echo "no es un admin";
+	}
+	echo "<br>";
+	if (Auth::user()->hasRole('admin')) {
+		echo "es un admin"; 
+	}else{
+		echo "no es un admin";
+	}
+	//echo "Role:".Auth::user()->hasRole('role-name').'<br>';
+	//echo "Permission:".Auth::user()->can('permission-name').'<br>';
+});
+
+Route::group(['prefix' => 'admin', 'middleware' => ['role:admin']], function() {
+    Route::get('/', 'AdminController@index');
+    Route::get('/', function(){
+    	return view('welcome');
+    });
+    
+});
