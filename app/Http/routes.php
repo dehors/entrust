@@ -11,6 +11,11 @@
 |
 */
 
+use App\Role;
+use App\User;
+use App\Permission;
+use Illuminate\Support\Facades\DB;
+
 Route::get('/', function () {
     return view('welcome');
 });
